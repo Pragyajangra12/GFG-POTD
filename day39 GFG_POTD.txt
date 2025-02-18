@@ -1,0 +1,29 @@
+K Closest Points to Origin
+Difficulty: MediumAccuracy: 67.3%Submissions: 9K+Points: 4
+Given an array of points where each point is represented as points[i] = [xi, yi] on the X-Y plane and an integer k, return the k closest points to the origin (0, 0).
+
+The distance between two points on the X-Y plane is the Euclidean distance, defined as: 
+
+sqrt( (x2 - x1)2 + (y2 - y1)2 )
+
+Note: You can return the k closest points in any order, driver code will sort them before printing.
+SOLUTION:
+K Closest Points to Origin
+class Solution{
+public int[][] kClosest(int[][] points, int k) {
+        // Your code here
+        PriorityQueue<int[]> pq= new PriorityQueue<>((a,b)->
+            (b[0]*b[0]+b[1]*b[1])-(a[0]*a[0]+a[1]*a[1]));
+        for(int i=0;i<points.length;i++){
+            pq.add(points[i]);
+            if(pq.size()>k){
+                pq.poll();
+            }
+        }
+        int[][] ans= new int[k][2];
+        for(int j=0;j<k;j++){
+            ans[j]=pq.poll();
+        }
+        return ans;
+    }
+}
