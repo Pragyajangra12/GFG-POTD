@@ -1,0 +1,37 @@
+Find median in a stream
+Difficulty: HardAccuracy: 30.34%Submissions: 137K+Points: 8Average Time: 45m
+Given a data stream arr[] where integers are read sequentially, the task is to determine the median of the elements encountered so far after each new integer is read.
+
+There are two cases for median on the basis of data set size.
+
+1. If the data set has an odd number then the middle one will be consider as median.
+2. If the data set has an even number then there is no distinct middle value and the median will be the arithmetic mean of the two middle values.
+SOLUTION:
+class Solution {
+    public ArrayList<Double> getMedian(int[] arr) {
+        // code here
+        ArrayList<Double> ans= new ArrayList<>();
+        PriorityQueue<Integer> pq1= new PriorityQueue<>(
+            Collections.reverseOrder());
+        PriorityQueue<Integer> pq2= new PriorityQueue<>();
+        for(int num:arr){
+            if(pq1.isEmpty()|| num<pq1.peek()){
+                pq1.offer(num);
+            }else{
+                pq2.offer(num);
+            }
+             if (pq1.size() > pq2.size() + 1) {
+                pq2.offer(pq1.poll());
+            } else if (pq2.size() > pq1.size()) {
+                pq1.offer(pq2.poll());
+            }
+            if(pq1.size()==pq2.size()){
+                ans.add((pq1.peek()+pq2.peek())/2.0);
+            }
+            else{
+                ans.add((double)pq1.peek());
+            }
+        }
+        return ans;
+    }
+}
