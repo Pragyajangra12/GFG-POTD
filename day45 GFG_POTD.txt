@@ -1,0 +1,32 @@
+Stock span problem
+Difficulty: MediumAccuracy: 43.56%Submissions: 213K+Points: 4
+The stock span problem is a financial problem where we have a series of daily price quotes for a stock and we need to calculate the span of stock price for all days. The span arr[i] of the stocks price on a given day i is defined as the maximum number of consecutive days just before the given day, for which the price of the stock on the given day is less than or equal to its price on the current day.
+SOLUTION:
+class Solution {
+    public ArrayList<Integer> calculateSpan(int[] arr) {
+        // write code here
+            int n = arr.length;
+        int[] ans = new int[n]; // Using array instead of ArrayList for faster writes
+        Deque<Integer> stack = new ArrayDeque<>(); // Faster than Stack<Integer>
+
+        for (int i = 0; i < n; i++) {
+            // Maintain a decreasing stack (pop elements that are ≤ current)
+            while (!stack.isEmpty() && arr[stack.peek()] <= arr[i]) {
+                stack.pop();
+            }
+
+            // If stack is empty, it means all previous elements are smaller
+            ans[i] = stack.isEmpty() ? (i + 1) : (i - stack.peek());
+
+            stack.push(i); // Push current index
+        }
+
+        // Convert int[] to ArrayList<Integer> before returning
+        ArrayList<Integer> result = new ArrayList<>();
+        for (int num : ans) {
+            result.add(num);
+        }
+
+        return result;
+    }
+}
