@@ -1,0 +1,49 @@
+Maximum of minimum for every window size
+Difficulty: HardAccuracy: 42.9%Submissions: 54K+Points: 8Average Time: 45m
+Given an array of integers arr[], the task is to find the maximum of the minimum values for every possible window size in the array, where the window size ranges from 1 to arr.size().
+
+More formally, for each window size k, determine the smallest element in all windows of size k, and then find the largest value among these minimums where 1<=k<=arr.size()
+SOLUTION:
+class Solution {
+    public ArrayList<Integer> maxOfMins(int[] arr) {
+        // Your code here
+        int n=arr.length;
+        ArrayList<Integer> ans= new ArrayList<>();
+         int[] prevSmaller = new int[n];
+        int[] nextSmaller = new int[n];
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < n; i++) {
+            while (!stack.isEmpty() && arr[stack.peek()] >= arr[i]) {
+                stack.pop();
+            }
+            prevSmaller[i] = stack.isEmpty() ? -1 : stack.peek();
+            stack.push(i);
+        }
+        stack.clear();
+        for(int i=n-1;i>=0;i--){
+            while(!stack.isEmpty() && arr[stack.peek()]>=arr[i]){
+                stack.pop();
+            }
+            nextSmaller[i]=stack.isEmpty() ? n : stack.peek();
+            stack.push(i);
+        }
+        int[] res = new int[n + 1];
+        Arrays.fill(res, Integer.MIN_VALUE);
+
+        // Fill res array where res[k] stores max of min for windows of size k
+        for (int i = 0; i < n; i++) {
+            int windowSize = nextSmaller[i] - prevSmaller[i] - 1;
+            res[windowSize] = Math.max(res[windowSize], arr[i]);
+        }
+
+        // Fill missing values (ensuring decreasing order)
+        for (int i = n - 1; i >= 1; i--) {
+            res[i] = Math.max(res[i], res[i + 1]);
+        }
+        for (int i = 1; i <= n; i++) {
+            ans.add(res[i]);
+        }
+
+        return ans;
+}
+}
