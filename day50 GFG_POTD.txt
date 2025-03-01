@@ -1,0 +1,38 @@
+Decode the string
+Difficulty: MediumAccuracy: 44.28%Submissions: 52K+Points: 4Average Time: 10m
+Given an encoded string s, the task is to decode it. The encoding rule is :
+
+k[encodedString], where the encodedString inside the square brackets is being repeated exactly k times. Note that k is guaranteed to be a positive integer, and encodedString contains only lowercase english alphabets.
+Note: The test cases are generated so that the length of the output string will never exceed 105 .
+SOLUTION:
+class Solution {
+    static String decodeString(String s) {
+        // code here
+         Stack<Integer> countStack = new Stack<>();
+        Stack<StringBuilder> stringStack = new Stack<>();
+        StringBuilder currentStr = new StringBuilder();
+        int k = 0;
+
+        for (char ch : s.toCharArray()) {
+            if (Character.isDigit(ch)) {
+                k = k * 10 + (ch - '0'); // Handle multi-digit numbers
+            } else if (ch == '[') {
+                countStack.push(k); // Store the repeat count
+                stringStack.push(currentStr); // Store the current string
+                currentStr = new StringBuilder(); // Reset for next segment
+                k = 0; // Reset k
+            } else if (ch == ']') {
+                int repeatTimes = countStack.pop();
+                StringBuilder decodedSegment = stringStack.pop();
+                for (int i = 0; i < repeatTimes; i++) {
+                    decodedSegment.append(currentStr);
+                }
+                currentStr = decodedSegment; // Update currentStr
+            } else {
+                currentStr.append(ch); // Append normal characters
+            }
+        }
+        return currentStr.toString();
+        
+    }
+}
