@@ -1,0 +1,45 @@
+Longest Bounded-Difference Subarray
+Difficulty: MediumAccuracy: 73.86%Submissions: 4K+Points: 4
+Given an array of positive integers arr[] and a non-negative integer x, the task is to find the longest sub-array where the absolute difference between any two elements is not greater than x.
+If multiple such subarrays exist, return the one that starts at the smallest index.
+SOLUTION:
+class Solution {
+
+    public ArrayList<Integer> longestSubarray(int[] arr, int x) {
+        // code here
+         int left = 0, right = 0;
+        int maxLength = 0, startIdx = 0;
+        
+        TreeMap<Integer, Integer> window = new TreeMap<>(); // Store frequency of elements
+        
+        while (right < arr.length) {
+            window.put(arr[right], window.getOrDefault(arr[right], 0) + 1);
+
+            // Maintain the condition |max - min| ≤ x
+            while (!window.isEmpty() && (window.lastKey() - window.firstKey() > x)) {
+                int leftNum = arr[left];
+                window.put(leftNum, window.get(leftNum) - 1);
+                if (window.get(leftNum) == 0) {
+                    window.remove(leftNum);
+                }
+                left++;
+            }
+
+            // Update the longest valid subarray
+            if (right - left + 1 > maxLength) {
+                maxLength = right - left + 1;
+                startIdx = left;
+            }
+            
+            right++;
+        }
+
+        // Extract the subarray from startIdx with length maxLength
+        ArrayList<Integer> result = new ArrayList<>();
+        for (int i = startIdx; i < startIdx + maxLength; i++) {
+            result.add(arr[i]);
+        }
+
+        return result;
+    }
+}
