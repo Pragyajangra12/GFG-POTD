@@ -1,0 +1,26 @@
+class Solution {
+    public int maxPartitions(String s) {
+        // code here
+        int lastSeen[] = new int[26]; 
+        Arrays.fill(lastSeen, -1); // Initialize last seen indices
+        
+        // Step 1: Record the last occurrence of each character
+        for (int i = 0; i < s.length(); i++) {
+            lastSeen[s.charAt(i) - 'a'] = i;
+        }
+
+        int partitions = 0, partitionEnd = 0, partitionStart = 0;
+
+        // Step 2: Iterate again to determine partitions
+        for (int i = 0; i < s.length(); i++) {
+            partitionEnd = Math.max(partitionEnd, lastSeen[s.charAt(i) - 'a']);
+
+            if (i == partitionEnd) { // When we reach the farthest last seen character
+                partitions++;
+                partitionStart = i + 1; // Move to the next partition
+            }
+        }
+
+        return partitions;
+    }
+}
