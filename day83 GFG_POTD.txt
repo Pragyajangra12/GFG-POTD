@@ -1,0 +1,56 @@
+class Solution {
+    static class Cell {
+        int x, y, time;
+        Cell(int x, int y, int time) {
+            this.x = x;
+            this.y = y;
+            this.time = time;
+        }
+    }
+    public int orangesRotting(int[][] mat) {
+        // Code here
+        int n = mat.length;
+        int m = mat[0].length;
+        Queue<Cell> queue = new LinkedList<>();
+        int freshOranges = 0;
+        
+        // Step 1: Find all initially rotten oranges and count fresh ones
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (mat[i][j] == 2) {
+                    queue.add(new Cell(i, j, 0));
+                } else if (mat[i][j] == 1) {
+                    freshOranges++;
+                }
+            }
+        }
+        
+        // If no fresh oranges, return 0 immediately
+        if (freshOranges == 0) return 0;
+        
+        // Step 2: BFS Traversal
+        int time = 0;
+        int[] dx = {-1, 1, 0, 0}; // Up, Down, Left, Right
+        int[] dy = {0, 0, -1, 1};
+        
+        while (!queue.isEmpty()) {
+            Cell cell = queue.poll();
+            int x = cell.x, y = cell.y;
+            time = cell.time;
+            
+            for (int i = 0; i < 4; i++) {
+                int newX = x + dx[i];
+                int newY = y + dy[i];
+                
+                if (newX >= 0 && newX < n && newY >= 0 && newY < m && mat[newX][newY] == 1) {
+                    mat[newX][newY] = 2;
+                    queue.add(new Cell(newX, newY, time + 1));
+                    freshOranges--;
+                }
+            }
+        }
+        
+        return (freshOranges == 0) ? time : -1;
+        
+    }
+}
