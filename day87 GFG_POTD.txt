@@ -1,0 +1,41 @@
+List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        for (int[] edge : edges) {
+            adj.get(edge[0]).add(edge[1]); // directed edge from edge[0] to edge[1]
+        }
+
+        // Step 2: Create visited and recursion stack arrays
+        boolean[] visited = new boolean[V];
+        boolean[] recStack = new boolean[V];
+
+        // Step 3: Call DFS for each unvisited node
+        for (int i = 0; i < V; i++) {
+            if (!visited[i]) {
+                if (dfs(i, adj, visited, recStack)) {
+                    return true; // cycle found
+                }
+            }
+        }
+
+        return false; // no cycle
+    }
+
+    private boolean dfs(int node, List<List<Integer>> adj, boolean[] visited, boolean[] recStack) {
+        visited[node] = true;
+        recStack[node] = true;
+
+        for (int neighbor : adj.get(node)) {
+            if (!visited[neighbor]) {
+                if (dfs(neighbor, adj, visited, recStack)) {
+                    return true;
+                }
+            } else if (recStack[neighbor]) {
+                return true; // cycle detected
+            }
+        }
+
+        recStack[node] = false; // backtrack
+        return false;
