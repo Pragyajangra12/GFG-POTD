@@ -1,0 +1,50 @@
+class Solution {
+    static class Pair {
+        int vertex;
+        int weight;
+
+        Pair(int vertex, int weight) {
+            this.vertex = vertex;
+            this.weight = weight;
+        }
+    }
+    public int[] dijkstra(int V, int[][] edges, int src) {
+        // code here
+        List<List<Pair>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++) adj.add(new ArrayList<>());
+
+        for (int[] edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            int w = edge[2];
+            adj.get(u).add(new Pair(v, w));
+            adj.get(v).add(new Pair(u, w)); // Because it's an undirected graph
+        }
+
+        // Distance array, initially set to infinity
+        int[] dist = new int[V];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        dist[src] = 0;
+
+        // Min-heap priority queue (distance, vertex)
+        PriorityQueue<Pair> pq = new PriorityQueue<>(Comparator.comparingInt(p -> p.weight));
+        pq.add(new Pair(src, 0));
+
+        while (!pq.isEmpty()) {
+            Pair current = pq.poll();
+            int u = current.vertex;
+
+            for (Pair neighbor : adj.get(u)) {
+                int v = neighbor.vertex;
+                int weight = neighbor.weight;
+
+                if (dist[u] + weight < dist[v]) {
+                    dist[v] = dist[u] + weight;
+                    pq.add(new Pair(v, dist[v]));
+                }
+            }
+        }
+
+        return dist;
+    }
+}
