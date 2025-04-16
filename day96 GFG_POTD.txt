@@ -1,0 +1,17 @@
+class Solution {
+    public void floydWarshall(int[][] dist) {
+        // Code here
+        int n=dist.length;
+         // Triple nested loop for Floyd Warshall
+        for (int k = 0; k < n; k++) {              // Pick all vertices as intermediate
+            for (int i = 0; i < n; i++) {          // Pick all source vertices one by one
+                for (int j = 0; j < n; j++) {      // Pick all destination vertices one by one
+                    // If vertex k is on the shortest path from i to j, then update the value of dist[i][j]
+                    if (dist[i][k] != 1e8 && dist[k][j] != 1e8) {
+                        dist[i][j] = Math.min(dist[i][j], dist[i][k] + dist[k][j]);
+                    }
+                }
+            }
+        }
+    }
+}
