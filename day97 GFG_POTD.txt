@@ -1,0 +1,76 @@
+class Solution {
+     
+    static class Edge {
+        int to, weight;
+        Edge(int to, int weight) {
+            this.to = to;
+            this.weight = weight;
+        }
+    }
+    public int findMinCycle(int V, int[][] edges) {
+        // code here
+        List<List<Edge>> graph = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            graph.add(new ArrayList<>());
+        }
+
+        for (int[] edge : edges) {
+            graph.get(edge[0]).add(new Edge(edge[1], edge[2]));
+            graph.get(edge[1]).add(new Edge(edge[0], edge[2]));
+        }
+
+        int minCycle = Integer.MAX_VALUE;
+
+        // Try removing each edge and use Dijkstra to find shortest path between its nodes
+        for (int[] edge : edges) {
+            int u = edge[0], v = edge[1], w = edge[2];
+
+            // Temporarily remove edge u-v
+            removeEdge(graph, u, v, w);
+            
+            int distance = dijkstra(graph, u, v, V);
+
+            if (distance != Integer.MAX_VALUE) {
+                minCycle = Math.min(minCycle, distance + w);
+            }
+
+            // Add the edge back
+            graph.get(u).add(new Edge(v, w));
+            graph.get(v).add(new Edge(u, w));
+        }
+
+        return minCycle == Integer.MAX_VALUE ? -1 : minCycle;
+    }
+
+    private static void removeEdge(List<List<Edge>> graph, int u, int v, int w) {
+        graph.get(u).removeIf(edge -> edge.to == v && edge.weight == w);
+        graph.get(v).removeIf(edge -> edge.to == u && edge.weight == w);
+    }
+
+    private static int dijkstra(List<List<Edge>> graph, int src, int dest, int V) {
+        int[] dist = new int[V];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        dist[src] = 0;
+
+        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[1]));
+        pq.offer(new int[]{src, 0});
+
+        while (!pq.isEmpty()) {
+            int[] curr = pq.poll();
+            int node = curr[0], d = curr[1];
+
+            if (node == dest) return d;
+
+            for (Edge edge : graph.get(node)) {
+                int next = edge.to;
+                int newDist = d + edge.weight;
+                if (newDist < dist[next]) {
+                    dist[next] = newDist;
+                    pq.offer(new int[]{next, newDist});
+                }
+            }
+        }
+
+        return Integer.MAX_VALUE; // unreachable
+    }
+};
