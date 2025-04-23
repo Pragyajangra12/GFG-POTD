@@ -1,0 +1,27 @@
+class Solution {
+    public int[] singleNum(int[] arr) {
+        // Code here
+        HashMap<Integer, Integer> freqMap = new HashMap<>();
+
+        // Count the frequency of each number
+        for (int num : arr) {
+            freqMap.put(num, freqMap.getOrDefault(num, 0) + 1);
+        }
+
+        // Collect numbers that appear exactly once
+        ArrayList<Integer> resultList = new ArrayList<>();
+        for (Map.Entry<Integer, Integer> entry : freqMap.entrySet()) {
+            if (entry.getValue() == 1) {
+                resultList.add(entry.getKey());
+            }
+        }
+
+        // Convert to array and sort
+        int[] result = new int[2];
+        result[0] = resultList.get(0);
+        result[1] = resultList.get(1);
+        Arrays.sort(result);
+        return result;
+    }
+}
+
