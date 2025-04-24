@@ -1,0 +1,25 @@
+class Solution {
+    public int getSingle(int[] arr) {
+        // code here
+         int result = 0;
+
+        // Iterate over every bit (0 to 31 for a 32-bit integer)
+        for (int i = 0; i < 32; i++) {
+            int sum = 0;
+            int bit = 1 << i;
+
+            for (int num : arr) {
+                if ((num & bit) != 0) {
+                    sum++;
+                }
+            }
+
+            // If bit appears not in multiples of 3, it's part of the unique number
+            if (sum % 3 != 0) {
+                result |= bit;
+            }
+        }
+
+        return result;
+    }
+}
