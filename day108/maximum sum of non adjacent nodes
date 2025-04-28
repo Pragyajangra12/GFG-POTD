@@ -1,0 +1,28 @@
+class Solution {
+    // Function to return the maximum sum of non-adjacent nodes.
+    public int getMaxSum(Node root) {
+        // code here
+        int[] res = helper(root);
+        return Math.max(res[0], res[1]);
+        
+    }
+    static int[] helper(Node node) {
+        if (node == null) {
+            return new int[]{0, 0};
+        }
+        
+        int[] left = helper(node.left);
+        int[] right = helper(node.right);
+        
+        int[] res = new int[2];
+        
+        // If we do not include current node, we can take max of including or not including children
+        res[0] = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
+        
+        // If we include current node, we cannot include children
+        res[1] = node.data + left[0] + right[0];
+        
+        return res;
+    }
+}
+
