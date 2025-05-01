@@ -1,0 +1,14 @@
+class Solution {
+    ArrayList<Integer> nthRowOfPascalTriangle(int n) {
+        // code here
+         ArrayList<Integer> row = new ArrayList<>();
+        long val = 1;
+        row.add(1); // First element is always 1
+
+        for (int k = 1; k < n; k++) {
+            val = val * (n - k) / k;
+            row.add((int)(val % 1000000007)); // Modulo as per problem constraints
+        }
+        return row;
+    }
+}
