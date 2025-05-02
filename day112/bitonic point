@@ -1,0 +1,21 @@
+int n = arr.length;
+        int low = 0, high = n - 1;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+
+            // Check if mid is the peak (bitonic point)
+            if ((mid == 0 || arr[mid] > arr[mid - 1]) &&
+                (mid == n - 1 || arr[mid] > arr[mid + 1])) {
+                return arr[mid];
+            }
+            // If the mid element is part of increasing sequence
+            else if (mid < n - 1 && arr[mid] < arr[mid + 1]) {
+                low = mid + 1;
+            }
+            // If the mid element is part of decreasing sequence
+            else {
+                high = mid - 1;
+            }
+        }
+        return -1;
