@@ -1,0 +1,40 @@
+class Solution {
+    static int longestSubarray(int[] arr, int k) {
+        // Code Here
+        int n = arr.length;
+        int[] transformed = new int[n];
+        
+        // Step 1: Transform array
+        for (int i = 0; i < n; i++) {
+            transformed[i] = (arr[i] > k) ? 1 : -1;
+        }
+
+        // Step 2: Initialize
+        Map<Integer, Integer> firstOccurrence = new HashMap<>();
+        int prefixSum = 0, maxLength = 0;
+
+        // Important: store first occurrence of 0 at index -1
+        firstOccurrence.put(0, -1);
+
+        // Step 3: Loop through array
+        for (int i = 0; i < n; i++) {
+            prefixSum += transformed[i];
+
+            if (prefixSum > 0) {
+                // Whole array from 0 to i is valid
+                maxLength = i + 1;
+            } else {
+                // Check if prefixSum - 1 was seen before
+                if (firstOccurrence.containsKey(prefixSum - 1)) {
+                    int prevIndex = firstOccurrence.get(prefixSum - 1);
+                    maxLength = Math.max(maxLength, i - prevIndex);
+                }
+            }
+
+            // Store first occurrence of this prefixSum
+            firstOccurrence.putIfAbsent(prefixSum, i);
+        }
+
+        return maxLength;
+    }
+}
