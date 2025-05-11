@@ -1,0 +1,28 @@
+class Solution {
+    public static int kthLargest(int[] arr, int k) {
+        // code here
+        int n = arr.length;
+
+        // Min-heap to store the k largest sums
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+
+        // Generate all subarray sums
+        for (int i = 0; i < n; i++) {
+            int sum = 0;
+            for (int j = i; j < n; j++) {
+                sum += arr[j];
+
+                // Add current subarray sum to heap
+                minHeap.offer(sum);
+
+                // Maintain size k
+                if (minHeap.size() > k) {
+                    minHeap.poll();  // Remove smallest
+                }
+            }
+        }
+
+        // Root of min-heap is the K-th largest
+        return minHeap.peek();
+    }
+}
