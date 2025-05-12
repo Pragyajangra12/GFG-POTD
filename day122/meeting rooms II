@@ -1,0 +1,51 @@
+class Solution {
+    public int mostBooked(int n, int[][] meetings) {
+        // code here
+        Arrays.sort(meetings, (a, b) -> Integer.compare(a[0], b[0])); // Sort by start time
+
+        int[] count = new int[n]; // Track number of meetings per room
+        PriorityQueue<Integer> availableRooms = new PriorityQueue<>(); // Min heap of available room numbers
+        for (int i = 0; i < n; i++) availableRooms.offer(i);
+
+        // [endTime, roomNumber]
+        PriorityQueue<long[]> busyRooms = new PriorityQueue<>((a, b) -> 
+            a[0] == b[0] ? Long.compare(a[1], b[1]) : Long.compare(a[0], b[0])
+        );
+
+        for (int[] meeting : meetings) {
+            int start = meeting[0];
+            int end = meeting[1];
+            int duration = end - start;
+
+            // Free up rooms that are done before current meeting starts
+            while (!busyRooms.isEmpty() && busyRooms.peek()[0] <= start) {
+                availableRooms.offer((int) busyRooms.poll()[1]);
+            }
+
+            if (!availableRooms.isEmpty()) {
+                int room = availableRooms.poll();
+                count[room]++;
+                busyRooms.offer(new long[]{start + duration, room});
+            } else {
+                // Delay the meeting
+                long[] earliest = busyRooms.poll();
+                long newEnd = earliest[0] + duration;
+                int room = (int) earliest[1];
+                count[room]++;
+                busyRooms.offer(new long[]{newEnd, room});
+            }
+        }
+
+        // Find the room with the max count
+        int maxMeetings = 0;
+        int resultRoom = 0;
+        for (int i = 0; i < n; i++) {
+            if (count[i] > maxMeetings) {
+                maxMeetings = count[i];
+                resultRoom = i;
+            }
+        }
+
+        return resultRoom;
+    }
+}
