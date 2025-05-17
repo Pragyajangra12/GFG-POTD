@@ -1,0 +1,40 @@
+ int n = arr.length;
+        ArrayList<Integer> result = new ArrayList<>();
+        int[] temp = new int[n];
+        int left = 0, right = n - 1;
+        int index = A >= 0 ? n - 1 : 0;
+
+        while (left <= right) {
+            int valLeft = transform(arr[left], A, B, C);
+            int valRight = transform(arr[right], A, B, C);
+
+            if (A >= 0) {
+                if (valLeft > valRight) {
+                    temp[index--] = valLeft;
+                    left++;
+                } else {
+                    temp[index--] = valRight;
+                    right--;
+                }
+            } else {
+                if (valLeft < valRight) {
+                    temp[index++] = valLeft;
+                    left++;
+                } else {
+                    temp[index++] = valRight;
+                    right--;
+                }
+            }
+        }
+
+        for (int val : temp) {
+            result.add(val);
+        }
+
+        return result;
+    }
+
+    private int transform(int x, int A, int B, int C) {
+        return A * x * x + B * x + C;
+    }
+}
