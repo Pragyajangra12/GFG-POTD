@@ -1,0 +1,41 @@
+class Solution {
+    public Node sortedInsert(Node head, int data) {
+       Node newNode = new Node(data);
+        if (head == null) {
+            newNode.next = newNode;
+            return newNode;
+        }
+        Node current = head;
+        while (true) {
+            // Case 2a: Insert in between two nodes
+            if (current.data <= data && data <= current.next.data) {
+                break;
+            }
+
+            // Case 2b: At turning point between max and min
+            if (current.data > current.next.data) {
+                if (data >= current.data || data <= current.next.data) {
+                    break;
+                }
+            }
+
+            current = current.next;
+
+            // Case 3: Came full circle
+            if (current == head) {
+                break;
+            }
+        }
+
+        // Insert new node
+        newNode.next = current.next;
+        current.next = newNode;
+
+        // Update head if the new node is the new smallest value
+        if (data < head.data) {
+            return newNode;
+        } else {
+            return head;
+        }
+    }
+}
