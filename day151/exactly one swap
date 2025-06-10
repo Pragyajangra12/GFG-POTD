@@ -1,0 +1,38 @@
+class Solution {
+    int countStrings(String s) {
+        int n = s.length();
+        if (n < 2) return 0;
+
+        // Total possible i < j swaps
+        long totalSwaps = (long) n * (n - 1) / 2;
+
+        // Count character frequencies
+        int[] freq = new int[256];
+        for (char c : s.toCharArray()) {
+            freq[c]++;
+        }
+
+        // Subtract invalid swaps (between equal characters)
+        long duplicateSwaps = 0;
+        for (int f : freq) {
+            if (f >= 2) {
+                duplicateSwaps += (long) f * (f - 1) / 2;
+            }
+        }
+
+        long distinctSwaps = totalSwaps - duplicateSwaps;
+
+        // If there exists at least one pair of equal characters,
+        // then swapping them gives the same string,
+        // so we need to count that 1 duplicate string
+        boolean hasDuplicate = false;
+        for (int f : freq) {
+            if (f >= 2) {
+                hasDuplicate = true;
+                break;
+            }
+        }
+
+        return (int)(distinctSwaps + (hasDuplicate ? 1 : 0));
+    }
+}
