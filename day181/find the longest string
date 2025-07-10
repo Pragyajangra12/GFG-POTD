@@ -1,0 +1,46 @@
+class Solution {
+    static class TrieNode {
+        TrieNode[] children = new TrieNode[26];
+        boolean isEnd = false;
+        String word = null;
+    }
+    public String longestString(String[] words) {
+        // code here
+         TrieNode root = new TrieNode();
+
+        // Step 1: Insert all words into the Trie
+        for (String word : words) {
+            TrieNode node = root;
+            for (char ch : word.toCharArray()) {
+                int idx = ch - 'a';
+                if (node.children[idx] == null) {
+                    node.children[idx] = new TrieNode();
+                }
+                node = node.children[idx];
+            }
+            node.isEnd = true;
+            node.word = word;
+        }
+
+        // Step 2: BFS to find the longest word with all prefixes present
+        String result = "";
+        Queue<TrieNode> queue = new LinkedList<>();
+        queue.offer(root);
+
+        while (!queue.isEmpty()) {
+            TrieNode curr = queue.poll();
+            for (int i = 25; i >= 0; i--) { // reverse to get lexicographically smallest
+                TrieNode child = curr.children[i];
+                if (child != null && child.isEnd) {
+                    queue.offer(child);
+                    if (child.word.length() > result.length() ||
+                        (child.word.length() == result.length() && child.word.compareTo(result) < 0)) {
+                        result = child.word;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+}
