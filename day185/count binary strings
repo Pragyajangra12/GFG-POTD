@@ -1,0 +1,36 @@
+class Solution {
+    public int cuts(String s) {
+        // code here
+         int n = s.length();
+        Set<String> powersOfFive = generatePowerOfFiveBinaryStrings(n);
+
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
+
+        for (int i = 1; i <= n; i++) {
+            for (int j = i - 1; j >= 0; j--) {
+                String sub = s.substring(j, i);
+                if (sub.charAt(0) == '0') continue; // skip substrings with leading zeros
+                if (powersOfFive.contains(sub) && dp[j] != Integer.MAX_VALUE) {
+                    dp[i] = Math.min(dp[i], dp[j] + 1);
+                }
+            }
+        }
+
+        return dp[n] == Integer.MAX_VALUE ? -1 : dp[n];
+    }
+
+    private Set<String> generatePowerOfFiveBinaryStrings(int maxLength) {
+        Set<String> powers = new HashSet<>();
+        long num = 1;
+        while (true) {
+            String bin = Long.toBinaryString(num);
+            if (bin.length() > maxLength) break;
+            powers.add(bin);
+            num *= 5;
+        }
+        return powers;
+    
+    }
+}
