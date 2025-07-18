@@ -1,0 +1,38 @@
+class Solution {
+    int lcmTriplets(int n) {
+        // code here
+        if (n <= 2) return n;
+
+        long res;
+
+        if (n % 2 != 0) {
+            // If n is odd, use (n, n-1, n-2)
+            res = lcm(n, lcm(n - 1, n - 2));
+        } else {
+            // If n is even
+            if (n % 3 != 0) {
+                // If n is not divisible by 3, use (n, n-1, n-3)
+                res = lcm(n, lcm(n - 1, n - 3));
+            } else {
+                // Otherwise, use (n-1, n-2, n-3)
+                res = lcm(n - 1, lcm(n - 2, n - 3));
+            }
+        }
+
+        return (int) res;  // Safe cast to int
+    }
+
+    private long gcd(long a, long b) {
+        while (b != 0) {
+            long t = b;
+            b = a % b;
+            a = t;
+        }
+        return a;
+    }
+
+    private long lcm(long a, long b) {
+        return (a * b) / gcd(a, b);
+    
+    }
+}
