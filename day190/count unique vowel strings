@@ -1,0 +1,54 @@
+class Solution {
+    public int vowelCount(String s) {
+        // code here
+         Map<Character, List<Integer>> vowelMap = new HashMap<>();
+        Set<Character> vowels = Set.of('a', 'e', 'i', 'o', 'u');
+
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (vowels.contains(ch)) {
+                vowelMap.putIfAbsent(ch, new ArrayList<>());
+                vowelMap.get(ch).add(i);  // we can also just count, but keeping indices for clarity
+            }
+        }
+
+        // If no vowels, return 0
+        if (vowelMap.isEmpty()) return 0;
+
+        // Collect list of vowels and their available positions
+        List<Character> vowelList = new ArrayList<>(vowelMap.keySet());
+        int total = 0;
+
+        // Backtrack to generate all combinations of selecting one occurrence per vowel
+        total = backtrack(vowelMap, vowelList, 0, new ArrayList<>());
+
+        return total;
+    }
+
+    private int backtrack(Map<Character, List<Integer>> vowelMap, List<Character> vowelList,
+                          int idx, List<Character> chosen) {
+        if (idx == vowelList.size()) {
+            // Count permutations of chosen vowels
+            return factorial(chosen.size());
+        }
+
+        char vowel = vowelList.get(idx);
+        int count = 0;
+
+        // For each occurrence of the current vowel
+        for (int i = 0; i < vowelMap.get(vowel).size(); i++) {
+            chosen.add(vowel);  // pick this vowel
+            count += backtrack(vowelMap, vowelList, idx + 1, chosen);
+            chosen.remove(chosen.size() - 1); // backtrack
+        }
+
+        return count;
+    }
+
+    private int factorial(int n) {
+        int fact = 1;
+        for (int i = 2; i <= n; i++) fact *= i;
+        return fact;
+    
+    }
+}
