@@ -1,0 +1,48 @@
+class Solution {
+    public int countValid(int n, int[] arr) {
+        // code here
+         Set<Character> badDigits = new HashSet<>();
+        for (int digit : arr) {
+            badDigits.add((char) (digit + '0'));
+        }
+
+        // Total n-digit numbers
+        int total = (int) Math.pow(10, n) - (int) Math.pow(10, n - 1);
+
+        // Build allowed digits set
+        List<Character> allowed = new ArrayList<>();
+        for (char ch = '0'; ch <= '9'; ch++) {
+            if (!badDigits.contains(ch)) {
+                allowed.add(ch);
+            }
+        }
+
+        // Edge case: if no allowed digits, then all numbers must contain at least one bad digit
+        if (allowed.isEmpty()) return total;
+
+        // Count how many numbers contain only allowed digits
+        int validCount = countValid(n, allowed);
+
+        // Subtract from total to get count of numbers that contain at least one bad digit
+        return total - validCount;
+    }
+
+    private int countValid(int n, List<Character> allowed) {
+        int count = 0;
+        int size = allowed.size();
+
+        // No way to form numbers if no non-zero allowed digit for leading digit
+        List<Character> leadingAllowed = new ArrayList<>();
+        for (char ch : allowed) {
+            if (ch != '0') leadingAllowed.add(ch);
+        }
+
+        if (leadingAllowed.isEmpty()) return 0;
+
+        // First digit: cannot be 0
+        count += leadingAllowed.size() * (int) Math.pow(size, n - 1);
+
+        return count;
+    
+    }
+}
