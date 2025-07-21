@@ -1,0 +1,41 @@
+class Solution {
+      
+    int cntCoprime(int[] arr) {
+       int n = arr.length;
+
+        int maxVal = 0;
+        for (int val : arr) {
+            maxVal = Math.max(maxVal, val);
+        }
+
+        int[] freq = new int[maxVal + 1];
+
+       
+        for (int val : arr) {
+            freq[val]++;
+        }
+
+        int[] divCount = new int[maxVal + 1];
+        for (int i = 1; i <= maxVal; i++) {
+            for (int j = i; j <= maxVal; j += i) {
+                divCount[i] += freq[j];
+            }
+        }
+
+        // Step 3: Inclusion-Exclusion to get pairs with GCD = i
+        long[] gcdPairs = new long[maxVal + 1];
+        for (int i = maxVal; i >= 1; i--) {
+            long count = divCount[i];
+            gcdPairs[i] = count * (count - 1) / 2;
+
+            for (int j = 2 * i; j <= maxVal; j += i) {
+                gcdPairs[i] -= gcdPairs[j];
+            }
+        }
+
+        // Step 4: Return number of coprime pairs (GCD = 1)
+        long result = gcdPairs[1];
+
+        return result > Integer.MAX_VALUE ? -1 : (int) result;
+    }
+}
