@@ -1,0 +1,29 @@
+class Solution {
+    public int maxCircularSum(int arr[]) {
+        // code here
+        int totalSum = 0;
+        int maxKadane = Integer.MIN_VALUE;
+        int currentMax = 0;
+        int minKadane = Integer.MAX_VALUE;
+        int currentMin = 0;
+
+        for (int num : arr) {
+            // For max subarray (normal Kadane)
+            currentMax = Math.max(num, currentMax + num);
+            maxKadane = Math.max(maxKadane, currentMax);
+
+            // For min subarray
+            currentMin = Math.min(num, currentMin + num);
+            minKadane = Math.min(minKadane, currentMin);
+
+            totalSum += num;
+        }
+
+        // Edge case: all numbers are negative
+        if (maxKadane < 0)
+            return maxKadane;
+
+        // Return max of non-wrapping and wrapping subarray
+        return Math.max(maxKadane, totalSum - minKadane);
+    }
+}
